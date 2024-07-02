@@ -9,7 +9,8 @@ ITEM.EquipMenuData = {
 }
 ITEM.CanBuy = { }
 
-ITEM.material = "vgui/ttt/icon_speedrun"
+ITEM.hud = Material("vgui/ttt/dynamic/roles/icon_psycho.vmt")
+ITEM.material = "vgui/ttt/dynamic/roles/icon_psycho"
 ITEM.builtin = false
 
 hook.Add("TTTPlayerSpeedModifier", "TTT2PsychoSpeedrun", function(ply, _, _, speedMultiplierModifier)
@@ -17,5 +18,5 @@ hook.Add("TTTPlayerSpeedModifier", "TTT2PsychoSpeedrun", function(ply, _, _, spe
         return
     end
 
-    speedMultiplierModifier[1] = speedMultiplierModifier[1] * 1.1
+    speedMultiplierModifier[1] = speedMultiplierModifier[1] * 1.2
 end)
