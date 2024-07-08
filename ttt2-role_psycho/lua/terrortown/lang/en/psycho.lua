@@ -11,6 +11,10 @@ L["credit_" .. PSYCHO.abbr .. "_all"] = "Psycho, you have been awarded {num} equ
 
 -- STATUS LANGUAGE STRINGS
 L["psycho_gadget"] = "Psycho Transform"
-L["label_psy_transform_delay"] = "The delay between transforming/untransforming: "
-L["label_psycho_transform_dmg_multi"] = "The damage multiplier when transformed: "
-L["label_psycho_transform_spd_multi"] = "The speed multiplier when transformed"
+L["label_psy_transform_delay"] = "The delay between transforming: "
+L["label_psy_transform_dmg_multi"] = "The damage multiplier when transformed: "
+L["label_psy_transform_spd_multi"] = "The speed multiplier when transformed"
+L["status_psy_transform_cooldown"] = "You have transformed recently and the gadget is on cooldown"
+L["status_psy_dmg_bonus"] = "You have transformed and received a damage up!"
+L["item_psycho_speedrun_title"] = "You have transformed into the psycho!"
+L["item_psycho_speedrun_desc"] = "Use your buffs to aid you in battle! Be careful, other people see you differently."

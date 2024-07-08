@@ -35,7 +35,7 @@ SWEP.Primary.Damage         = 0
 SWEP.Primary.ClipSize       = -1
 SWEP.Primary.DefaultClip    = -1
 SWEP.Primary.Automatic      = false
-SWEP.Primary.Delay          = GetConVar("ttt2_psy_transform_delay"):GetInt()
+SWEP.Primary.Delay          = 0
 SWEP.Primary.Ammo           = "none"
 
 SWEP.Kind                   = WEAPON_CLASS
@@ -52,31 +52,18 @@ function SWEP:OnDrop()
 end
 
 -- Override original primary attack
+-- Only transform when cooldown is off. User can return back to normal at anytime cooldown or not
 local psyOriginalModel
 function SWEP:PrimaryAttack()
-      --update delay in the case it was changed
-	  self.Primary.Delay = GetConVar("ttt2_psy_transform_delay"):GetInt()
-	  self:SetNextPrimaryFire( CurTime() + self.Primary.Delay )
-	  if not IsValid(self:GetOwner()) then return end
-      local transformPitch = math.Rand(5,10)
-      local transformYaw = math.Rand(-5,5)
-      self:GetOwner():ViewPunch(Angle( transformPitch, transformYaw, 0 ))
-	  --check if already psycho
-	  if self:GetOwner():HasEquipmentItem("item_psycho") then
+	self:SetNextPrimaryFire( CurTime() + self.Primary.Delay )
+	if not IsValid(self:GetOwner()) then return end
+	if not timer.Exists("ttt2_transform_cooldown_timer") and not self:GetOwner():HasEquipmentItem("item_psycho") then
+		--punch the users camera for cinematic effect
+		local transformPitch = math.Rand(5,10)
+		local transformYaw = math.Rand(-5,5)
+		self:GetOwner():ViewPunch(Angle( transformPitch, transformYaw, 0 ))
 		if SERVER then
-			--if so, remove psycho items, and change pm
-			self:GetOwner():RemoveItem("item_psycho")
-			self:GetOwner():RemoveItem("item_ttt_radar")
-			self:GetOwner():SetModel(psyOriginalModel)
-		end
-		--play suit out sound only to client
-		if CLIENT then
-			self:GetOwner():EmitSound("suitout.wav")
-		end
-		STATUS:RemoveStatus(self:GetOwner(), "ttt2_psy_dmg_status")
-	  else
-		if SERVER then
-			--give psycho items, and change pm if not psycho
+			--give user all psycho items and switch pm
 			self:GetOwner():GiveItem("item_psycho")
 			self:GetOwner():GiveItem("item_ttt_radar")
 			psyOriginalModel = self:GetOwner():GetModel()
@@ -87,8 +74,24 @@ function SWEP:PrimaryAttack()
 			self:GetOwner():EmitSound("suitup.wav")
 		end
 		STATUS:AddStatus(self:GetOwner(), "ttt2_psy_dmg_status", false)
-	  end
-	  STATUS:AddTimedStatus(self:GetOwner(), "ttt2_psy_transform_cooldown", GetConVar("ttt2_psy_transform_delay"):GetInt(), true)
+		--start cooldowns when the user transforms again
+		STATUS:AddTimedStatus(self:GetOwner(), "ttt2_psy_transform_cooldown", GetConVar("ttt2_psy_transform_delay"):GetInt(), true)
+		timer.Create("ttt2_transform_cooldown_timer",GetConVar("ttt2_psy_transform_delay"):GetInt(), 1, function() end)
+	elseif self:GetOwner():HasEquipmentItem("item_psycho") then
+		local transformPitch = math.Rand(5,10)
+		local transformYaw = math.Rand(-5,5)
+		self:GetOwner():ViewPunch(Angle( transformPitch, transformYaw, 0 ))
+		if SERVER then
+			self:GetOwner():RemoveItem("item_psycho")
+			self:GetOwner():RemoveItem("item_ttt_radar")
+			self:GetOwner():SetModel(psyOriginalModel)
+		end
+		--play suit out sound only to client
+		if CLIENT then
+			self:GetOwner():EmitSound("suitout.wav")
+		end
+		STATUS:RemoveStatus(self:GetOwner(), "ttt2_psy_dmg_status")
+	end
 end
 
 --Timed status for cooldown	
@@ -99,14 +102,14 @@ if CLIENT then
 			hud = Material("vgui/ttt/icons/dmgup.png"),
 			type = "good",
 			name = "Psycho Damage Up",
-			sidebarDescription = "You have transformed and received a damage up!"
+			sidebarDescription = "status_psy_dmg_bonus"
 		})
 		
 		STATUS:RegisterStatus("ttt2_psy_transform_cooldown", {
 			hud = Material("vgui/ttt/icons/timer.png"),
 			type = "bad",
 			name = "Psycho Delay",
-			sidebarDescription = "You have transformed/untransformed and the gadget is on cooldown"
+			sidebarDescription = "status_psy_transform_cooldown"
 		})
 	end)
 end

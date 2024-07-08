@@ -45,7 +45,7 @@ function ROLE:GiveRoleLoadout(ply, isRoleChange)
 end
 
 --bonus damage while transformed
-hook.Add("EntityTakeDamage", "ttt2_psycho_transform_dmg", function(target, dmginfo)
+hook.Add("EntityTakeDamage", "ttt2_psy_transform_dmg", function(target, dmginfo)
 	-- get the attacker
 	local attacker = dmginfo:GetAttacker()
 
@@ -55,15 +55,15 @@ hook.Add("EntityTakeDamage", "ttt2_psycho_transform_dmg", function(target, dmgin
 	if not (attacker:GetSubRole() == ROLE_PSYCHO) then return end
 	
 	if attacker:HasEquipmentItem("item_psycho") then
-		dmginfo:SetDamage(dmginfo:GetDamage() * GetConVar("ttt2_psycho_transform_dmg_multi"):GetFloat())
+		dmginfo:SetDamage(dmginfo:GetDamage() * GetConVar("ttt2_psy_transform_dmg_multi"):GetFloat())
 	end
 end)
 
 
 
 CreateConVar("ttt2_psy_transform_delay", 5, {FCVAR_ARCHIVE, FCVAR_NOTIFY})
-CreateConVar("ttt2_psycho_transform_dmg_multi", "1.2", {FCVAR_ARCHIVE, FCVAR_NOTFIY, FCVAR_REPLICATED})
-CreateConVar("ttt2_psycho_transform_spd_multi", "1.2", {FCVAR_ARCHIVE, FCVAR_NOTFIY, FCVAR_REPLICATED})
+CreateConVar("ttt2_psy_transform_dmg_multi", "1.2", {FCVAR_ARCHIVE, FCVAR_NOTFIY, FCVAR_REPLICATED})
+CreateConVar("ttt2_psy_transform_spd_multi", "1.2", {FCVAR_ARCHIVE, FCVAR_NOTFIY, FCVAR_REPLICATED})
 
 if CLIENT then
   function ROLE:AddToSettingsMenu(parent)
@@ -78,16 +78,16 @@ if CLIENT then
 	})
 	
 	form:MakeSlider({
-		serverConvar = "ttt2_psycho_transform_dmg_multi",
-		label = "label_psycho_transform_dmg_multi",
+		serverConvar = "ttt2_psy_transform_dmg_multi",
+		label = "label_psy_transform_dmg_multi",
 		min = 1.0,
 		max = 2.0,
 		decimal = 2
 	})
 	
 	form:MakeSlider({
-		serverConvar = "ttt2_psycho_transform_spd_multi",
-		label = "label_psycho_transform_spd_multi",
+		serverConvar = "ttt2_psy_transform_spd_multi",
+		label = "label_psy_transform_spd_multi",
 		min = 1.0,
 		max = 2.0,
 		decimal = 2
