@@ -45,8 +45,8 @@ function ROLE:GiveRoleLoadout(ply, isRoleChange)
 end
 
 function ROLE:RemoveRoleLoadout(ply, isRoleChange)
-		ply:StripWeapon("psycho_transform")
-		ply:RemoveEquipmentItem("item_ttt_armor")
+	ply:StripWeapon("psycho_transform")
+	ply:RemoveEquipmentItem("item_ttt_armor")
 end
 
 --bonus damage while transformed

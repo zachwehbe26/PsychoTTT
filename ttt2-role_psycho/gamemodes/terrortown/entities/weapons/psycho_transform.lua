@@ -68,9 +68,8 @@ function SWEP:PrimaryAttack()
 			self:GetOwner():GiveItem("item_ttt_radar")
 			psyOriginalModel = self:GetOwner():GetModel()
 			self:GetOwner():SetModel( "models/raincoat.mdl" )
-			--give user the disguiser and toggle it on
-			self:GetOwner():GiveItem("item_ttt_disguiser")
-			self:GetOwner():SetNWBool("disguised", 1)
+			--toggle disguiser on
+			self:GetOwner():SetNWBool("disguised", true)
 		end
 		--play suit up sound only to client
 		if CLIENT then
@@ -88,7 +87,8 @@ function SWEP:PrimaryAttack()
 			self:GetOwner():RemoveItem("item_psycho")
 			self:GetOwner():RemoveItem("item_ttt_radar")
 			self:GetOwner():SetModel(psyOriginalModel)
-			self:GetOwner():RemoveItem("item_ttt_disguiser")
+			--toggle disguiser off
+			self:GetOwner():SetNWBool("disguised", false)
 		end
 		--play suit out sound only to client
 		if CLIENT then
