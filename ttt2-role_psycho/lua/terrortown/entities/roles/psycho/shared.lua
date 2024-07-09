@@ -44,6 +44,11 @@ function ROLE:GiveRoleLoadout(ply, isRoleChange)
 	ply:GiveEquipmentItem("item_ttt_armor")
 end
 
+function ROLE:RemoveRoleLoadout(ply, isRoleChange)
+		ply:StripWeapon("psycho_transform")
+		ply:RemoveEquipmentItem("item_ttt_armor")
+end
+
 --bonus damage while transformed
 hook.Add("EntityTakeDamage", "ttt2_psy_transform_dmg", function(target, dmginfo)
 	-- get the attacker
@@ -61,7 +66,7 @@ end)
 
 
 
-CreateConVar("ttt2_psy_transform_delay", 5, {FCVAR_ARCHIVE, FCVAR_NOTIFY})
+CreateConVar("ttt2_psy_transform_delay", 20, {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 CreateConVar("ttt2_psy_transform_dmg_multi", "1.2", {FCVAR_ARCHIVE, FCVAR_NOTFIY, FCVAR_REPLICATED})
 CreateConVar("ttt2_psy_transform_spd_multi", "1.2", {FCVAR_ARCHIVE, FCVAR_NOTFIY, FCVAR_REPLICATED})
 
@@ -73,7 +78,7 @@ if CLIENT then
       serverConvar = "ttt2_psy_transform_delay",
       label = "label_psy_transform_delay",
       min = 1,
-      max = 30,
+      max = 120,
       decimal = 0
 	})
 	

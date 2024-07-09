@@ -68,13 +68,16 @@ function SWEP:PrimaryAttack()
 			self:GetOwner():GiveItem("item_ttt_radar")
 			psyOriginalModel = self:GetOwner():GetModel()
 			self:GetOwner():SetModel( "models/raincoat.mdl" )
+			--give user the disguiser and toggle it on
+			self:GetOwner():GiveItem("item_ttt_disguiser")
+			self:GetOwner():SetNWBool("disguised", 1)
 		end
 		--play suit up sound only to client
 		if CLIENT then
 			self:GetOwner():EmitSound("suitup.wav")
 		end
 		STATUS:AddStatus(self:GetOwner(), "ttt2_psy_dmg_status", false)
-		--start cooldowns when the user transforms again
+		--start cooldowns for when the user transforms again
 		STATUS:AddTimedStatus(self:GetOwner(), "ttt2_psy_transform_cooldown", GetConVar("ttt2_psy_transform_delay"):GetInt(), true)
 		timer.Create("ttt2_transform_cooldown_timer",GetConVar("ttt2_psy_transform_delay"):GetInt(), 1, function() end)
 	elseif self:GetOwner():HasEquipmentItem("item_psycho") then
@@ -85,6 +88,7 @@ function SWEP:PrimaryAttack()
 			self:GetOwner():RemoveItem("item_psycho")
 			self:GetOwner():RemoveItem("item_ttt_radar")
 			self:GetOwner():SetModel(psyOriginalModel)
+			self:GetOwner():RemoveItem("item_ttt_disguiser")
 		end
 		--play suit out sound only to client
 		if CLIENT then
@@ -94,8 +98,8 @@ function SWEP:PrimaryAttack()
 	end
 end
 
---Timed status for cooldown	
 if CLIENT then
+	--Timed status for cooldown	
     hook.Add("Initialize", "ttt2_psy_init", function()
 		
 		STATUS:RegisterStatus("ttt2_psy_dmg_status", {
@@ -112,4 +116,14 @@ if CLIENT then
 			sidebarDescription = "status_psy_transform_cooldown"
 		})
 	end)
+	--Remove timers on round end and start
+	hook.Add("TTTBeginRound", "remove_timers_on_prepare", function()
+		timer.Remove("ttt2_transform_cooldown_timer")
+		STATUS:RemoveStatus("ttt2_psy_transform_cooldown")
+	end)
+	hook.Add("TTTEndRound", "remove_timers_on_prepare", function()
+		timer.Remove("ttt2_transform_cooldown_timer")
+		STATUS:RemoveStatus("ttt2_psy_transform_cooldown")
+	end)
 end
+
