@@ -42,11 +42,17 @@ end
 function ROLE:GiveRoleLoadout(ply, isRoleChange)
 	ply:GiveEquipmentWeapon("psycho_transform")
 	ply:GiveEquipmentItem("item_ttt_armor")
+	self.psyOriginalModel = ply:GetModel()
 end
 
 function ROLE:RemoveRoleLoadout(ply, isRoleChange)
 	ply:StripWeapon("psycho_transform")
 	ply:RemoveEquipmentItem("item_ttt_armor")
+	ply:RemoveEquipmentItem("item_ttt_radar")
+	ply:RemoveEquipmentItem("item_psycho")
+	ply:SetNWBool("disguised", false)
+	ply:SetModel(self.psyOriginalModel)
+	STATUS:RemoveStatus(ply, "ttt2_psy_dmg_status")
 end
 
 --bonus damage while transformed
