@@ -9,3 +9,5 @@
 - Doing so disables your buffs but also returns your player model back to the default.
 - Although the psycho is a traitor, they have no shop and only the gadget with them.
 - This makes the psycho a powerful, but one-dimensional killer.
+
+![psy_cover](https://github.com/user-attachments/assets/611395d9-014d-4f81-8031-41a905820e1a)
